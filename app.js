@@ -1,12 +1,24 @@
-const { request, response } = require('express');
 const express = require('express');
 const app = express();
+const db = require('./db/connection');
+
 const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`O servidor está rodando na porta ${PORT}`);
 });
 
+// DB Connection
+(async () => {
+    try {
+        await db.authenticate();
+        console.log('Conectou ao banco com sucesso!');
+    } catch (error) {
+        console.error(`Ocorreu um erro ao conectar: ${error}`);
+    }
+})();
+
+// Routes
 app.get('/', (request, response) => {
     response.send('Está funcionando!');
 });
