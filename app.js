@@ -1,5 +1,7 @@
 const express = require('express');
+const handlebars = require('express-handlebars');
 const app = express();
+const path = require('path');
 const db = require('./db/connection');
 const bodyParser = require('body-parser');
 
@@ -11,6 +13,11 @@ app.listen(PORT, () => {
 
 // Body Parser
 app.use(bodyParser.urlencoded({extended: false}));
+
+// Handle Bars
+app.use('views', path.join(__dirname, 'views'));
+app.engine('handlebars', handlebars({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 // DB Connection
 (async () => {
