@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Job = require('../model/Job');
 
+router.get('/add', (request, response) => {
+    response.render('add');
+});
+
 // add job via post
 router.post('/add', async (request, response) => {
     const {

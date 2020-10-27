@@ -15,9 +15,12 @@ app.listen(PORT, () => {
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Handle Bars
-app.use('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', handlebars({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
+
+// Static folders
+app.use(express.static(path.join(__dirname, 'public')));
 
 // DB Connection
 (async () => {
@@ -31,7 +34,7 @@ app.set('view engine', 'handlebars');
 
 // Routes
 app.get('/', (request, response) => {
-    response.send('Está funcionando!');
+    response.render('index');
 });
 
 // Jobs routes
