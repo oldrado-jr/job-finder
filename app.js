@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const db = require('./db/connection');
 const bodyParser = require('body-parser');
+const Job = require('./model/Job');
 
 const PORT = 3000;
 
@@ -33,8 +34,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 })();
 
 // Routes
-app.get('/', (request, response) => {
-    response.render('index');
+app.get('/', async (request, response) => {
+    const jobs = await Job.findAll({
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    });
+    response.render('index', {jobs});
 });
 
 // Jobs routes
