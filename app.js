@@ -5,6 +5,8 @@ const path = require('path');
 const db = require('./db/connection');
 const bodyParser = require('body-parser');
 const Job = require('./model/Job');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const PORT = 3000;
 
@@ -35,12 +37,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.get('/', async (request, response) => {
-    const jobs = await Job.findAll({
+    const search = request.query.job;
+    let params = {
         order: [
             ['createdAt', 'DESC']
         ]
-    });
-    response.render('index', {jobs});
+    };
+    let options = {};
+
+    if (search) {
+        params.where = {
+            title: {
+                [Op.like]: `%${search}%`
+            }
+        };
+        options = {search};
+    }
+
+    try {
+        const jobs = await Job.findAll(params);
+        options.jobs = jobs;
+        response.render('index', options);
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 // Jobs routes
